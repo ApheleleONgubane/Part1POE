@@ -47,5 +47,4 @@ public class LoginTest {
         assertFalse(obj.checkUserName("kyle!!!!!!"));
     } 
     
-    
 }

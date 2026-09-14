@@ -32,14 +32,23 @@ public class Part1POE {
         System.out.print("Enter cell phone number (start with +27): ");
         String PhoneNumber = input.nextLine();
 
+        Login obj = new Login();
         // STEP 3: Call the registerUser method from the Login class
         // We give it all the user data, and it gives us back a message
-        String registrationMessage = myLoginSystem.registerUser(UserName, Password, PhoneNumber, FirstName, LastName);
+        String registrationMessage = obj.registerUser(UserName, Password, PhoneNumber, FirstName, LastName);
         
         System.out.println("\n--- Registration Result ---");
         System.out.println(registrationMessage);
         
-   
+   // ---- Now try to log in ----
+        System.out.println("\n--- Login ---");
+        System.out.print("Enter username to login: ");
+        String loginUsername = input.nextLine();
+        
+        System.out.print("Enter password to login: ");
+        String loginPassword = input.nextLine();
+        
+        
         input.close();
     }
 }                  
