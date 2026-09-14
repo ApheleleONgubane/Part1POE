@@ -47,4 +47,34 @@ public class LoginTest {
         assertFalse(obj.checkUserName("kyle!!!!!!"));
     } 
     
+    // 3. Test Cell Phone Number
+    @Test
+    public void testCellPhoneNumberCorrectlyFormatted() {
+        // Test Data: +27838968976
+        Login obj = new Login();
+        
+        String cellphoneNumber = "+27838968976";
+        boolean results = obj.checkCellPhoneNumber(cellphoneNumber);
+        
+        assertTrue(results);
+        assertTrue(obj.checkCellPhoneNumber("+27838968976"));
+    }
+
+    @Test
+    public void testCellPhoneIncorrectlyFormatted() {
+        // Test Data: 0896653
+        Login obj = new Login();
+        
+        String cellphoneNumber = "0896653";
+        boolean results = obj.checkCellPhoneNumber(cellphoneNumber);
+        assertFalse(obj.checkCellPhoneNumber("0896653"));
+    }
+
+    // 4. Test Registration Messages (assertEquals)
+    @Test
+    public void testRegisterUserSuccess() {
+        Login obj = new Login();
+        String expected = "Username successfully captured.\nPassword successfully captured.\nCell phone number successfully added.\n";
+        assertEquals(expected, obj.registerUser("kyl_1", "Ch&sec@ke99!", "+27838968976", "Kyle", "Smith"));
+    }
 }
