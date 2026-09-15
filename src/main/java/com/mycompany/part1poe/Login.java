@@ -28,7 +28,7 @@ public class Login {
 
         // 2. Loop through each letter to look for an underscore
         for (int i = 0; i < username.length(); i++) {
-            if (username.charAt(i) == '_') {
+            if (username.charAt(i) == ('_')) {
                 hasUnderscore = true;
             }
         }
@@ -129,13 +129,34 @@ public class Login {
 
         // If EVERYTHING passed, save the details
         if (checkUserName(username) && checkPasswordComplexity(password) && checkCellPhoneNumber(phoneNumber)) {
-            UserName = username;         // Save method parameter into class variable
-            Password = password;
-            PhoneNumber = phoneNumber;
-            FirstName = firstName;
-            LastName = lastName;
+           this.UserName = username;         // Save method parameter into class variable
+            this.Password = password;
+            this.PhoneNumber = phoneNumber;
+            this.FirstName = firstName;
+            this.LastName = lastName;
         }
 
         return finalMessage;
     }
+        // METHOD 5: Login User
+    public boolean loginUser(String username, String password) {
+        // Check if what they typed matches what we saved during registration
+        if (UserName.equals(UserName) && Password.equals(Password)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // METHOD 6: Return Login Status
+    public String returnLoginStatus(boolean isLoggedIn) {
+        if (isLoggedIn == true) {
+            return "Welcome " + FirstName + ", " + LastName + " it is great to see you again.";
+        } else {
+            return "Username or password incorrect, please try again.";
+        }
+    }
 }
+  
+    
+

@@ -22,9 +22,9 @@ public class Part1POE {
        
         System.out.print("Enter last name: ");
         String LastName = input.nextLine();
-               String UserName = input.nextLine();
 
         System.out.print("Enter username: ");
+        String UserName = input.nextLine();
        
         System.out.print("Enter password: ");
         String Password = input.nextLine();
@@ -48,7 +48,13 @@ public class Part1POE {
         System.out.print("Enter password to login: ");
         String loginPassword = input.nextLine();
         
+       
+         boolean isSuccess = myLoginSystem.loginUser(UserName, Password);
+       
+        // Print the final message
+        System.out.println(myLoginSystem.returnLoginStatus(isSuccess));
         
+
         input.close();
     }
 }                  
