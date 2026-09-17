@@ -32,15 +32,17 @@ public class Part1POE {
         System.out.print("Enter cell phone number (start with +27): ");
         String PhoneNumber = input.nextLine();
 
-        Login obj = new Login();
+       // Login obj = new Login();
         // STEP 3: Call the registerUser method from the Login class
         // We give it all the user data, and it gives us back a message
-        String registrationMessage = obj.registerUser(UserName, Password, PhoneNumber, FirstName, LastName);
+        String registrationMessage = myLoginSystem.registerUser(UserName, Password, PhoneNumber, FirstName, LastName);
         
         System.out.println("\n--- Registration Result ---");
         System.out.println(registrationMessage);
+     
+       if(registrationMessage=="Registration successful"){
         
-   // ---- Now try to log in ----
+        // ---- Now try to log in ----
         System.out.println("\n--- Login ---");
         System.out.print("Enter username to login: ");
         String loginUsername = input.nextLine();
@@ -49,11 +51,11 @@ public class Part1POE {
         String loginPassword = input.nextLine();
         
        
-         boolean isSuccess = myLoginSystem.loginUser(UserName, Password);
+         boolean isSuccess = myLoginSystem.loginUser(loginUsername, loginPassword);
        
         // Print the final message
         System.out.println(myLoginSystem.returnLoginStatus(isSuccess));
-        
+       }
 
         input.close();
     }

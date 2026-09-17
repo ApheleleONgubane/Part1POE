@@ -134,6 +134,8 @@ public class Login {
             this.PhoneNumber = phoneNumber;
             this.FirstName = firstName;
             this.LastName = lastName;
+            
+            finalMessage ="Registration successful";
         }
 
         return finalMessage;
@@ -141,7 +143,7 @@ public class Login {
         // METHOD 5: Login User
     public boolean loginUser(String username, String password) {
         // Check if what they typed matches what we saved during registration
-        if (UserName.equals(UserName) && Password.equals(Password)) {
+        if (username.equals(this.UserName) && password.equals(this.Password)) {
             return true;
         } else {
             return false;
@@ -150,11 +152,19 @@ public class Login {
 
     // METHOD 6: Return Login Status
     public String returnLoginStatus(boolean isLoggedIn) {
-        if (isLoggedIn == true) {
+        if (isLoggedIn) {
             return "Welcome " + FirstName + ", " + LastName + " it is great to see you again.";
         } else {
             return "Username or password incorrect, please try again.";
         }
+    }
+    
+    public void getUser(){
+        System.out.println(this.UserName);
+    }
+    
+    public void getPass(){
+        System.out.println(this.Password);
     }
 }
   
