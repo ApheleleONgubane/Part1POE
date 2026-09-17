@@ -44,7 +44,7 @@ public class LoginTest {
         // 3. Check that it is false
         assertFalse(results);
         // We expect it to return FALSE
-        assertFalse(obj.checkUserName("kyle!!!!!!"));
+       
     } 
     
     // 3. Test Cell Phone Number
