@@ -72,13 +72,19 @@ public class LoginTest {
 
     // 4. Test Registration Messages (assertEquals)
     @Test
-    public void testRegisterUserSuccess() {
+    public void testPasswordMeetsRequirements() {
         Login obj = new Login();
-        String expected = "Username successfully captured.\nPassword successfully captured.\nCell phone number successfully added.\n";
-        assertEquals(expected, obj.registerUser("kyl_1", "Ch&sec@ke99!", "+27838968976", "Kyle", "Smith"));
+        String password = "Ch&sec@ke99!";
+        boolean results = obj.checkPasswordComplexity(password);
+        assertTrue(results);
     }
-    // 5. Test Login
-    // 5. Test Login Successful
+   @Test
+    public void testPasswordDoesNotMeetRequirements() {
+        Login obj = new Login();
+        String password = "password";
+        boolean results = obj.checkPasswordComplexity(password);
+        assertFalse(results);
+    }
 @Test
 public void testLoginSuccessful() {
     // Create a fresh Login object for THIS test
