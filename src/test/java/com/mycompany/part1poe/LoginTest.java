@@ -77,4 +77,30 @@ public class LoginTest {
         String expected = "Username successfully captured.\nPassword successfully captured.\nCell phone number successfully added.\n";
         assertEquals(expected, obj.registerUser("kyl_1", "Ch&sec@ke99!", "+27838968976", "Kyle", "Smith"));
     }
+    // 5. Test Login
+    // 5. Test Login Successful
+@Test
+public void testLoginSuccessful() {
+    // Create a fresh Login object for THIS test
+    Login login = new Login();
+    
+    // First, register a user so the system has data to check against
+    login.registerUser("kyl_1", "Ch&sec@ke99!", "+27838968976", "Kyle", "Smith");
+   
+    // Now test login
+    assertTrue(login.loginUser("kyl_1", "Ch&sec@ke99!"));
+}
+
+// 6. Test Login Failed
+@Test
+public void testLoginFailed() {
+    // Create a fresh Login object for THIS test
+    Login login = new Login();
+    
+    // First, register a user
+    login.registerUser("kyl_1", "Ch&sec@ke99!", "+27838968976", "Kyle", "Smith");
+   
+    // Test with wrong password -> should be FALSE
+    assertFalse(login.loginUser("kyl_1", "wrongpassword"));
+}                  
 }
