@@ -45,7 +45,56 @@ public class LoginTest {
         assertFalse(results);
         // We expect it to return FALSE
        
-    } 
+    }
+     @Test
+    
+
+    public void testUsernameSuccessMessage() {
+        Login obj = new Login();
+        // The assignment table expects this exact string on success
+        String expected = "Username successfully captured.";
+        String actual = obj.registerUser("kyl_1", "Ch&sec@ke99!", "+27838968976", "Kyle", "Smith");
+        // Note: Since registerUser returns all 3 messages, we check if it CONTAINS the username success message
+        assertTrue(actual.contains(expected));
+    }
+     @Test
+    public void testUsernameFailureMessage() {
+        Login obj = new Login();
+        String expected = "Username is not correctly formatted; please ensure that your username contains an underscore and is no more than five characters in length.";
+        String actual = obj.registerUser("kyle!!!!!!", "Ch&sec@ke99!", "+27838968976", "Kyle", "Smith");
+        assertTrue(actual.contains(expected));
+    }
+    //Passrord Test 
+    @Test
+    public void testPasswordMeetsRequirements() {
+        Login obj = new Login();
+        String password = "Ch&sec@ke99!";
+        boolean results = obj.checkPasswordComplexity(password);
+        assertTrue(results);
+    }
+
+    @Test
+    public void testPasswordDoesNotMeetRequirements() {
+        Login obj = new Login();
+        String password = "password";
+        boolean results = obj.checkPasswordComplexity(password);
+        assertFalse(results);
+    }
+     @Test
+    public void testPasswordSuccessMessage() {
+        Login obj = new Login();
+        String expected = "Password successfully captured.";
+        String actual = obj.registerUser("kyl_1", "Ch&sec@ke99!", "+27838968976", "Kyle", "Smith");
+        assertTrue(actual.contains(expected));
+    }
+
+    @Test
+    public void testPasswordFailureMessage() {
+        Login obj = new Login();
+        String expected = "Password is not correctly formatted; please ensure that the password contains at least eight characters, a capital letter, a number, and a special character.";
+        String actual = obj.registerUser("kyl_1", "password", "+27838968976", "Kyle", "Smith");
+        assertTrue(actual.contains(expected));
+    }
     
     // 3. Test Cell Phone Number
     @Test
@@ -69,22 +118,22 @@ public class LoginTest {
         boolean results = obj.checkCellPhoneNumber(cellphoneNumber);
         assertFalse(obj.checkCellPhoneNumber("0896653"));
     }
+@Test
+    public void testCellPhoneSuccessMessage() {
+        Login obj = new Login();
+        String expected = "Cell phone number successfully added.";
+        String actual = obj.registerUser("kyl_1", "Ch&sec@ke99!", "+27838968976", "Kyle", "Smith");
+        assertTrue(actual.contains(expected));
+    }
 
-    // 4. Test Registration Messages (assertEquals)
     @Test
-    public void testPasswordMeetsRequirements() {
+    public void testCellPhoneFailureMessage() {
         Login obj = new Login();
-        String password = "Ch&sec@ke99!";
-        boolean results = obj.checkPasswordComplexity(password);
-        assertTrue(results);
+        String expected = "Cell phone number incorrectly formatted or does not contain international code.";
+        String actual = obj.registerUser("kyl_1", "Ch&sec@ke99!", "0896653", "Kyle", "Smith");
+        assertTrue(actual.contains(expected));
     }
-   @Test
-    public void testPasswordDoesNotMeetRequirements() {
-        Login obj = new Login();
-        String password = "password";
-        boolean results = obj.checkPasswordComplexity(password);
-        assertFalse(results);
-    }
+   
 @Test
 public void testLoginSuccessful() {
     // Create a fresh Login object for THIS test
