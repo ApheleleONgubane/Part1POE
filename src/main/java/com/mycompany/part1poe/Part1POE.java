@@ -102,13 +102,35 @@ public class Part1POE {
     
     System.out.print("Choice: ");
    int action = Integer.parseInt(input.nextLine());
-       }
+       
+        if (action == 1) {
+     System.out.println(newMsg.SentMessage(1)); 
+     } else if (action == 2) {
+     System.out.println(newMsg.SentMessage(2)); 
+     } else if (action == 3) {
+      System.out.println(newMsg.storeMessage());
+     } else {
+   System.out.println("Invalid option.");
+    }
+    }
+                    
+     } else if (choice.equals("2")) {
+          System.out.println("Coming Soon.");
+      } else if (choice.equals("3")) {
+      System.out.println("Exiting QuickChat. Goodbye!");
+      running = false;
+      }else{
+                    System.out.println("Invalid option. Please try again.");
+                }
+            }
+        } 
       
 
-         }
-            }
+       }
+         input.close();    
         }  
-        input.close();
-    }
+        
+}
+    
                   
 
