@@ -84,7 +84,25 @@ public class Message {
             return "Invalid choice.";
         }
     }
+    
+    //Method 5: Store message as JSON
+ public String storeMessage() {
+        // We create the JSON text format manually
+        String jsonFormat = "\n  {\n" +
+                "    \"messageID\": \"" + this.messageID + "\",\n" +
+                "    \"recipient\": \"" + this.recipient + "\",\n" +
+                "    \"message\": \"" + this.message + "\",\n" +
+                "    \"messageHash\": \"" + this.messageHash + "\"\n" +
+                "  }";
 
+        // We use FileWriter to save it to a file called messages.json
+        try (java.io.FileWriter file = new java.io.FileWriter("messages.json", true)) {
+            file.write(jsonFormat);
+            return "Message successfully stored.";
+        } catch (java.io.IOException e) {
+            return "Error storing message: " + e.getMessage();
+        }
+    }
     // --- GETTERS (So we can print the details in the Main class later) ---
     public String getMessageID() {
         return messageID;
