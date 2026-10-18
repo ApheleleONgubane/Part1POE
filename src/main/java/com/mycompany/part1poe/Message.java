@@ -26,8 +26,8 @@ public class Message {
    
     // Helper method to generate a random 10-digit number
     private String generateMessageID() {
-        String id = "";
-        for (int i = 0; i < 10; i++) {
+        String id = "00";
+        for (int i = 0; i < 8; i++) {
             int digit = (int) (Math.random() * 10);
             id = id + digit;
         }
