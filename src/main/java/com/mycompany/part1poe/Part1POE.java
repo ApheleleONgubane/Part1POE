@@ -55,9 +55,60 @@ public class Part1POE {
        
         // Print the final message
         System.out.println(myLoginSystem.returnLoginStatus(isSuccess));
+        
+        //Part 2 code 
+        if (isSuccess) {
+            System.out.println("\nWelcome to QuickChat.");
+            
+            boolean running = true;
+            
+            while (running) {
+           System.out.println("\nMenu:");
+           System.out.println("1) Send Messages");
+           System.out.println("2) Show recently sent messages");
+           System.out.println("3) Quit");
+           System.out.print("Choose an option: ");
+                
+            String choice = input.nextLine();
+                
+         if (choice.equals("1")) {
+        System.out.print("How many messages do you wish to enter? ");
+         int numMessages = Integer.parseInt(input.nextLine());
+                    
+        for (int i = 0; i < numMessages; i++) {
+        System.out.print("\nEnter recipient cell number (+27...): ");
+       String recipient = input.nextLine();
+                        
+    System.out.print("Enter message: ");
+   String msgText = input.nextLine();
+                        
+   if (msgText.length() > 250) {
+   System.out.println("Message exceeds 250 characters by " + (msgText.length() - 250) + "; please reduce the size.");
+  i--; 
+ continue;
+  }
+   Message newMsg = new Message(recipient, msgText, i);
+                        
+ System.out.println("\n--- Message Details ---");
+ System.out.println("Message ID: " + newMsg.getMessageID());
+ System.out.println("Message Hash: " + newMsg.createMessageHash());
+ System.out.println("Recipient: " + recipient);
+ System.out.println("Message: " + msgText);
+                        
+ System.out.println("\nOptions:");
+    System.out.println("1) Send Message");
+    System.out.println("2) Disregard Message");
+    System.out.println("3) Store Message");
+    
+    System.out.print("Choice: ");
+   int action = Integer.parseInt(input.nextLine());
        }
+      
 
+         }
+            }
+        }  
         input.close();
     }
-}                  
+                  
 
