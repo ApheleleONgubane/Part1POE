@@ -53,10 +53,37 @@ public class MessageTest {
         assertEquals(expected, actual);
     }
     
+    @Test
+    public void testSecondMessageHashCreation() {
+        // Testing the 2nd test message from the assignment to ensure the counter increments
+        Message obj = new Message("08575975889", "Hi Keegan, did you receive the payment?", 1);
+        String expected = "00:1:HIPAYMENT";
+        String actual = obj.createMessageHash();
+        assertEquals(expected, actual);
+    }
+    
     //Message ID Test
     @Test
     public void testMessageIDCreated() {
         Message obj = new Message("+27718693002", "Test", 0);
         assertTrue(obj.checkMessageID());
+    }
+    //seny message options test 
+    @Test
+    public void testSentMessageOption1() {
+        Message obj = new Message("+27718693002", "Test", 0);
+        assertEquals("Message successfully sent.", obj.SentMessage(1));
+    }
+
+    @Test
+    public void testSentMessageOption2() {
+        Message obj = new Message("+27718693002", "Test", 0);
+        assertEquals("Press 0 to delete the message.", obj.SentMessage(2));
+    }
+
+    @Test
+    public void testSentMessageOption3() {
+        Message obj = new Message("+27718693002", "Test", 0);
+        assertEquals("Message successfully stored.", obj.SentMessage(3));
     }
 }
