@@ -107,6 +107,7 @@ public class Part1POE {
      System.out.println(newMsg.SentMessage(1)); 
      } else if (action == 2) {
      System.out.println(newMsg.SentMessage(2)); 
+     input.nextLine();  //this  waits for me to press 0 for anything before continuing 
      } else if (action == 3) {
       System.out.println(newMsg.storeMessage());
      } else {
