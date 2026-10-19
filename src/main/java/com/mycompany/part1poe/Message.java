@@ -4,6 +4,7 @@
  */
 package com.mycompany.part1poe;
 
+
 /**
  *
  * @author Student
@@ -85,7 +86,8 @@ public class Message {
         }
     }
     
-    //Method 5: Store message as JSON
+    // Attribution: JSON storage code researched and adapted from YouTube tutorial: https://www.youtube.com/watch?v=r4MLHHlctKw
+    // --- METHOD 5: Store Message as JSON (Using JSONObject) ---
  public String storeMessage() {
         // We create the JSON text format manually
         String jsonFormat = "\n  {\n" +
@@ -97,7 +99,7 @@ public class Message {
 
         // We use FileWriter to save it to a file called messages.json
         try (java.io.FileWriter file = new java.io.FileWriter("messages.json", true)) {
-            file.write(jsonFormat);
+            file.write(jsonFormat + "\n"); // The \n makes sure multiple messages don't mash together
             return "Message successfully stored.";
         } catch (java.io.IOException e) {
             return "Error storing message: " + e.getMessage();
