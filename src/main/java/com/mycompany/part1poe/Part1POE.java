@@ -59,7 +59,7 @@ public class Part1POE {
         //Part 2 code 
         if (isSuccess) {
             System.out.println("\nWelcome to QuickChat.");
-            
+            int totalSent = 0;
             boolean running = true;
             
             while (running) {
@@ -71,11 +71,29 @@ public class Part1POE {
                 
             String choice = input.nextLine();
                 
-         if (choice.equals("1")) {
-        System.out.print("How many messages do you wish to enter? ");
-         int numMessages = Integer.parseInt(input.nextLine());
-                    
+         // ---- OPTION 1: SEND MESSAGES ----
+        if (choice.equals("1")) {
+
+            System.out.print("How many messages do you wish to enter? ");
+
+            int numMessages;
+
+            try {
+
+                numMessages = Integer.parseInt(input.nextLine());
+             if (numMessages <= 0) {
+             System.out.println("Please enter a number greater than 0.");
+ continue;
+          }
+
+  } catch (NumberFormatException e) {
+  System.out.println("Please enter a valid number.");
+   continue;
+     }
+             //for loop       
         for (int i = 0; i < numMessages; i++) {
+         System.out.println("\nMessage " + (i + 1));
+         //enter recipient
         System.out.print("\nEnter recipient cell number (+27...): ");
        String recipient = input.nextLine();
                         
@@ -87,51 +105,143 @@ public class Part1POE {
   i--; 
  continue;
   }
+   
    Message newMsg = new Message(recipient, msgText, i);
                         
- System.out.println("\n--- Message Details ---");
- System.out.println("Message ID: " + newMsg.getMessageID());
- System.out.println("Message Hash: " + newMsg.createMessageHash());
- System.out.println("Recipient: " + recipient);
- System.out.println("Message: " + msgText);
-                        
+// Check recipient cell number
+    if (!newMsg.checkRecipientCell().equals(
+       "Cell phone number successfully captured.")) {
+
+     System.out.println(newMsg.checkRecipientCell());
+
+     i--;
+   continue;
+      }
+
+   // Create message hash
+   newMsg.createMessageHash();
+
+   // ---- MESSAGE OPTIONS ----
  System.out.println("\nOptions:");
-    System.out.println("1) Send Message");
-    System.out.println("2) Disregard Message");
-    System.out.println("3) Store Message");
-    
-    System.out.print("Choice: ");
-   int action = Integer.parseInt(input.nextLine());
-       
-        if (action == 1) {
-     System.out.println(newMsg.SentMessage(1)); 
-     } else if (action == 2) {
-     System.out.println(newMsg.SentMessage(2)); 
-     input.nextLine();  //this  waits for me to press 0 for anything before continuing 
-     } else if (action == 3) {
-      System.out.println(newMsg.storeMessage());
-     } else {
-   System.out.println("Invalid option.");
-    }
-    }
-                    
-     } else if (choice.equals("2")) {
-          System.out.println("Coming Soon.");
-      } else if (choice.equals("3")) {
-      System.out.println("Exiting QuickChat. Goodbye!");
-      running = false;
-      }else{
-                    System.out.println("Invalid option. Please try again.");
-                }
-            }
-        } 
-      
+  System.out.println("1) Send Message");
+  System.out.println("2) Disregard Message");
+  System.out.println("3) Store Message");
 
+ System.out.print("Choose an option: ");
+
+ int action;
+
+  try {
+   action = Integer.parseInt(input.nextLine());
+
+   } catch (NumberFormatException e) {
+   System.out.println("Invalid option. Please try again.");
+      i--;
+   continue;
+   }                          
+
+     // ---- SEND MESSAGE ----
+    if (action == 1) {
+
+    System.out.println(newMsg.SentMessage(1));
+
+  // Increase total sent
+    totalSent++;
+
+   // Display message details after choosing Send
+   System.out.println("\n--- Message Details ---");
+   System.out.println("Message ID: " + newMsg.getMessageID());
+ System.out.println("Message Hash: " + newMsg.getMessageHash());
+   System.out.println("Recipient: " + newMsg.getRecipient());
+   System.out.println("Message: " + newMsg.getMessage());
+
+  }
+
+// ---- DISREGARD MESSAGE ----
+  else if (action == 2) {
+
+  System.out.println(newMsg.SentMessage(2));
+ System.out.print("Enter 0 to delete the message: ");
+   String deleteChoice = input.nextLine();
+
+  if (deleteChoice.equals("0")) {
+ System.out.println("Message deleted.");
+ } else {
+    System.out.println("Message disregarded.");
+     }
+
+      }
+
+   // ---- STORE MESSAGE ----
+       else if (action == 3) {
+
+        System.out.println(newMsg.storeMessage());
+
+  // Display stored message details
+  System.out.println("\n--- Message Details ---");
+  System.out.println("Message ID: " + newMsg.getMessageID());
+   System.out.println("Message Hash: " + newMsg.getMessageHash());
+   System.out.println("Recipient: " + newMsg.getRecipient());
+ System.out.println("Message: " + newMsg.getMessage());
+
+  }
+
+   else {
+
+   System.out.println("Invalid option. Please try again.");
+
+  i--;
+   }
+    }
+
+   }
+ // ---- SHOW TOTAL SENT MESSAGES ----
+ 
+ 
+   
+
+        // Your send messages code
+
+    // ---- OPTION 2: SHOW TOTAL SENT ----
+    else if (choice.equals("2")) {
+
+    System.out.println(
+      "\nTotal messages successfully sent: "
+         + totalSent
+         );
+
+     }
+
+                // ---- OPTION 3: QUIT ----
+     else if (choice.equals("3")) {
+
+     System.out.println(
+      "\nTotal messages successfully sent: "
+   + totalSent
+      );
+
+    System.out.println("Thank you for using QuickChat!");
+
+  running = false;
+
+     }
+
+      else {
+
+     System.out.println(
+       "Invalid menu option. Please try again."
+       );
        }
-         input.close();    
-        }  
-        
-}
-    
-                  
+        }
 
+    } else {
+
+  System.out.println(
+   "Username or password incorrect. Please try again."
+            );
+        }
+
+        input.close();
+       }
+    }
+}

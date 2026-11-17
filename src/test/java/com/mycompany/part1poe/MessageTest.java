@@ -86,4 +86,21 @@ public class MessageTest {
         Message obj = new Message("+27718693002", "Test", 0);
         assertEquals("Message successfully stored.", obj.SentMessage(3));
     }
+    @Test
+public void testMessageHashLoop() {
+
+    for (int i = 0; i < 5; i++) {
+
+        Message obj = new Message(
+                "+27718693002",
+                "Hello Mike",
+                i
+        );
+
+        String hash = obj.createMessageHash();
+
+        assertNotNull(hash);
+        assertTrue(hash.contains(":" + i + ":"));
+    }
+}
 }

@@ -4,6 +4,11 @@
  */
 package com.mycompany.part1poe;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
 
 /**
  *
@@ -25,102 +30,214 @@ public class Message {
         this.messageID = generateMessageID(); // Auto-generate the 10-digit ID
     }
    
-    // Helper method to generate a random 10-digit number
+    // METHOD 1: Generate random 10-digit Message ID
     private String generateMessageID() {
-        String id = "00";
-        for (int i = 0; i < 8; i++) {
+
+        String id = "";
+
+        for (int i = 0; i < 10; i++) {
+
             int digit = (int) (Math.random() * 10);
+
             id = id + digit;
         }
-          return id;
+
+        return id;
     }
-    // METHOD 1: Check Message ID (Not more than 10 characters)
+
+    // METHOD 2: Check Message ID
     public boolean checkMessageID() {
-        if (this.messageID.length() <= 10) {
-            return true;
-        } else {
-            return false;
-        }
+
+        return this.messageID.matches("\\d{10}");
     }
-   
-    // METHOD 2: Check Recipient Cell
+
+    // METHOD 3: Check Recipient Cell Number
     public String checkRecipientCell() {
-        // Regex: Must start with +27 and have 9 digits after (total 12 chars)
-        if (!this.recipient.matches("^\\+27\\d{9}$")) {
+
+        if (this.recipient == null ||
+                !this.recipient.matches("^\\+27\\d{9}$")) {
+
             return "Cell phone number is incorrectly formatted or does not contain an international code. Please correct the number and try again.";
         }
+
         return "Cell phone number successfully captured.";
     }
-   
-    // METHOD 3: Create Message Hash
+
+    // METHOD 4: Create Message Hash
     public String createMessageHash() {
-        // 1. Get the first two digits of the ID
+
+        // Get first two digits of message ID
         String firstTwoID = this.messageID.substring(0, 2);
-       
-        // 2. Split the message into words to find first and last
-        String[] words = this.message.split(" ");
-       
-        String firstWord = words[0];
-        String lastWord = words[words.length - 1];
-        
-        // 3. Clean up punctuation (like commas or question marks) from the words
-        firstWord = firstWord.replaceAll("[^a-zA-Z]", "");
-        lastWord = lastWord.replaceAll("[^a-zA-Z]", "");
-       
-        // 4. Combine them: ID + ":" + MessageNum + ":" + FIRSTWORD + LASTWORD
-        String hash = firstTwoID + ":" + this.numMessagesSent + ":" + (firstWord + lastWord).toUpperCase();
-       
+
+        // Remove unnecessary spaces
+        String cleanMessage = this.message.trim();
+
+        // Find first word
+        int firstSpace = cleanMessage.indexOf(" ");
+
+        String firstWord;
+
+        if (firstSpace == -1) {
+            firstWord = cleanMessage;
+        } else {
+            firstWord = cleanMessage.substring(0, firstSpace);
+        }
+
+        // Find last word
+        int lastSpace = cleanMessage.lastIndexOf(" ");
+
+        String lastWord;
+
+        if (lastSpace == -1) {
+            lastWord = cleanMessage;
+        } else {
+            lastWord = cleanMessage.substring(lastSpace + 1);
+        }
+
+        // Remove punctuation
+        firstWord = firstWord.replaceAll("[^a-zA-Z0-9]", "");
+        lastWord = lastWord.replaceAll("[^a-zA-Z0-9]", "");
+
+        // Create message hash
+        String hash = firstTwoID + ":"
+                + this.numMessagesSent + ":"
+                + (firstWord + lastWord).toUpperCase();
+
         this.messageHash = hash;
+
         return hash;
     }
-    // METHOD 4: Sent Message (1 = Send, 2 = Disregard, 3 = Store)
+
+    // METHOD 5: Send, Disregard or Store Message
     public String SentMessage(int choice) {
+
         if (choice == 1) {
+
             return "Message successfully sent.";
+
         } else if (choice == 2) {
+
             return "Press 0 to delete the message.";
+
         } else if (choice == 3) {
+
             return "Message successfully stored.";
+
         } else {
+
             return "Invalid choice.";
         }
     }
-    
-    // Attribution: JSON storage code researched and adapted from YouTube tutorial: https://www.youtube.com/watch?v=r4MLHHlctKw
-    // --- METHOD 5: Store Message as JSON (Using JSONObject) ---
- public String storeMessage() {
-        // We create the JSON text format manually
-        String jsonFormat = "\n  {\n" +
-                "    \"messageID\": \"" + this.messageID + "\",\n" +
-                "    \"recipient\": \"" + this.recipient + "\",\n" +
-                "    \"message\": \"" + this.message + "\",\n" +
-                "    \"messageHash\": \"" + this.messageHash + "\"\n" +
-                "  }";
 
-        // We use FileWriter to save it to a file called messages.json
-        try (java.io.FileWriter file = new java.io.FileWriter("messages.json", true)) {
-            file.write(jsonFormat + "\n"); // The \n makes sure multiple messages don't mash together
+    // METHOD 6: Store Message as JSON without external libraries
+    public String storeMessage() {
+
+        File file = new File("messages.json");
+
+        try {
+
+            String existingMessages = "";
+
+            // Read existing messages
+            if (file.exists() && file.length() > 0) {
+
+                Scanner reader = new Scanner(file);
+
+                while (reader.hasNextLine()) {
+
+                    existingMessages += reader.nextLine();
+                }
+
+                reader.close();
+
+                existingMessages = existingMessages.trim();
+            }
+
+            // Create message hash
+            if (this.messageHash == null) {
+
+                createMessageHash();
+            }
+
+            // Escape special JSON characters
+            String safeMessage = this.message
+                    .replace("\\", "\\\\")
+                    .replace("\"", "\\\"")
+                    .replace("\n", "\\n")
+                    .replace("\r", "\\r")
+                    .replace("\t", "\\t");
+
+            String safeRecipient = this.recipient
+                    .replace("\\", "\\\\")
+                    .replace("\"", "\\\"");
+
+            // Create JSON object
+            String newMessage = "{"
+                    + "\"messageID\":\"" + this.messageID + "\","
+                    + "\"recipient\":\"" + safeRecipient + "\","
+                    + "\"message\":\"" + safeMessage + "\","
+                    + "\"messageHash\":\"" + this.messageHash + "\""
+                    + "}";
+
+            // Add message to JSON array
+            if (existingMessages.isEmpty()
+                    || existingMessages.equals("[]")) {
+
+                existingMessages = "[" + newMessage + "]";
+
+            } else if (existingMessages.endsWith("]")) {
+
+                existingMessages = existingMessages.substring(
+                        0, existingMessages.length() - 1
+                );
+
+                existingMessages += "," + newMessage + "]";
+
+            } else {
+
+                return "Error: Invalid JSON file format.";
+            }
+
+            // Write updated JSON array to file
+            FileWriter writer = new FileWriter(file, false);
+
+            writer.write(existingMessages);
+
+            writer.close();
+
             return "Message successfully stored.";
-        } catch (java.io.IOException e) {
+
+        } catch (IOException e) {
+
             return "Error storing message: " + e.getMessage();
         }
     }
-    // --- GETTERS (So we can print the details in the Main class later) ---
+
+    // METHOD 7: Getters
+
     public String getMessageID() {
+
         return messageID;
     }
 
     public String getMessageHash() {
+
         return messageHash;
     }
 
     public String getRecipient() {
+
         return recipient;
     }
 
     public String getMessage() {
+
         return message;
     }
-}
-    
 
+    public int getNumMessagesSent() {
+
+        return numMessagesSent;
+    }
+
+}
