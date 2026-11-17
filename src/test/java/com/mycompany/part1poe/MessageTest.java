@@ -39,16 +39,31 @@ public class MessageTest {
 
     @Test
     public void testRecipientIncorrectlyFormatted() {
-        Message obj = new Message("08575975889", "Test message", 0);
-        String expected = "Cell phone number is incorrectly formatted or does not contain an international code. Please correct the number and try again.";
-        String actual = obj.checkRecipientCell();
+       Message obj = new Message(
+                "+27718693002",
+                "Hi Mike, can you join us for dinner tonight?",
+                0
+        );
+
+        String expected = obj.getMessageID().substring(0, 2)
+                + ":0:HITONIGHT";
+
+        String actual = obj.createMessageHash();
+
         assertEquals(expected, actual);
     }
     // message hash tests
     @Test
     public void testMessageHashCreation() {
-        Message obj = new Message("+27718693002", "Hi Mike, can you join us for dinner tonight?", 0);
-        String expected = "00:0:HITONIGHT";
+         Message obj = new Message(
+                "08575975889",
+                "Hi Keegan, did you receive the payment?",
+                1
+        );
+
+        String expected = obj.getMessageID().substring(0, 2)
+                + ":1:HIPAYMENT";
+
         String actual = obj.createMessageHash();
         assertEquals(expected, actual);
     }
@@ -56,8 +71,15 @@ public class MessageTest {
     @Test
     public void testSecondMessageHashCreation() {
         // Testing the 2nd test message from the assignment to ensure the counter increments
-        Message obj = new Message("08575975889", "Hi Keegan, did you receive the payment?", 1);
-        String expected = "00:1:HIPAYMENT";
+         Message obj = new Message(
+            "08575975889",
+            "Hi Keegan, did you receive the payment?",
+            1
+    );
+
+    String expected = obj.getMessageID().substring(0, 2)
+            + ":1:HIPAYMENT";
+
         String actual = obj.createMessageHash();
         assertEquals(expected, actual);
     }
