@@ -5,13 +5,18 @@
 package com.mycompany.part1poe;
 
 import java.util.Scanner;
-
+import java.util.ArrayList;
 /**
  *
  * @author Student
  */
 public class Part1POE {
 
+    //part 3 here 
+    static ArrayList<Message> sentMessages = new ArrayList<>();
+    static ArrayList<Message> disregardedMessages = new ArrayList<>();
+    static ArrayList<Message> storedMessages = new ArrayList<>();
+    
     public static void main(String[] args) {
          Scanner input = new Scanner(System.in);
         Login myLoginSystem = new Login();
@@ -56,7 +61,7 @@ public class Part1POE {
         // Print the final message
         System.out.println(myLoginSystem.returnLoginStatus(isSuccess));
         
-        //Part 2 code 
+        //Part 2 code and 3
         if (isSuccess) {
             System.out.println("\nWelcome to QuickChat.");
             int totalSent = 0;
@@ -67,6 +72,15 @@ public class Part1POE {
            System.out.println("1) Send Messages");
            System.out.println("2) Show recently sent messages");
            System.out.println("3) Quit");
+           
+         //part 3 menu options 
+           
+           System.out.println("4) Display Longest Message");
+           System.out.println("5) Search by Message ID");
+           System.out.println("6) Search by Recipient");
+           System.out.println("7) Delete Message by Hash");
+           System.out.println("8) Display Report");
+           
            System.out.print("Choose an option: ");
                 
             String choice = input.nextLine();
@@ -226,6 +240,22 @@ public class Part1POE {
 
      }
 
+     //part 3 options 
+     else if (choice.equals("4")) {
+            displayLongestMessage();
+        }
+        else if (choice.equals("5")) {
+            searchByMessageID(input);
+        }
+        else if (choice.equals("6")) {
+            searchByRecipient(input);
+        }
+        else if (choice.equals("7")) {
+            deleteMessageByHash(input);
+        }
+        else if (choice.equals("8")) {
+            displayReport();
+        }
       else {
 
      System.out.println(
@@ -243,5 +273,95 @@ public class Part1POE {
 
         input.close();
        }
+    }
+    
+    //part 3 Methods
+     private static void displayLongestMessage() {
+        Message longestMsg = null;
+        int maxLength = 0;
+        
+         // Check across all arrays
+        ArrayList<Message> allMessages = new ArrayList<>();
+        allMessages.addAll(sentMessages);
+        allMessages.addAll(storedMessages);
+        allMessages.addAll(disregardedMessages);
+
+        for (Message msg : allMessages) {
+            if (msg.getMessage().length() > maxLength) {
+                maxLength = msg.getMessage().length();
+                longestMsg = msg;
+            }
+        }
+
+        if (longestMsg != null) {
+            System.out.println("\nThe longest message is: \"" + longestMsg.getMessage() + "\"");
+        } else {
+            System.out.println("\nNo messages found.");
+        }
+    }
+
+    private static void searchByMessageID(Scanner input) {
+        System.out.print("Enter Message ID to search: ");
+        String id = input.nextLine();
+        
+        for (Message msg : sentMessages) {
+            if (msg.getMessageID().equals(id)) {
+                System.out.println("\nFound! Message: \"" + msg.getMessage() + "\"");
+                return;
+            }
+        }
+        System.out.println("\nMessage ID not found in sent messages.");
+    }
+
+    private static void searchByRecipient(Scanner input) {
+        System.out.print("Enter recipient number to search (+27...): ");
+        String recipient = input.nextLine();
+        boolean found = false;
+        
+        for (Message msg : sentMessages) {
+            if (msg.getRecipient().equals(recipient)) {
+                System.out.println("Sent: " + msg.getMessage());
+                found = true;
+            }
+        }
+        for (Message msg : storedMessages) {
+            if (msg.getRecipient().equals(recipient)) {
+                System.out.println("Stored: " + msg.getMessage());
+                found = true;
+            }
+        }
+        
+        if (!found) {
+            System.out.println("No messages found for this recipient.");
+        }
+    }
+
+    private static void deleteMessageByHash(Scanner input) {
+        System.out.print("Enter Message Hash to delete: ");
+        String hash = input.nextLine();
+        
+        for (int i = 0; i < sentMessages.size(); i++) {
+            if (sentMessages.get(i).getMessageHash().equals(hash)) {
+                Message deleted = sentMessages.remove(i);
+                System.out.println("\nMessage: \"" + deleted.getMessage() + "\" successfully deleted.");
+                return;
+            }
+        }
+        System.out.println("\nMessage Hash not found in sent messages.");
+    }
+
+    private static void displayReport() {
+        if (sentMessages.isEmpty()) {
+            System.out.println("\nNo sent messages to report.");
+            return;
+        }
+        
+        System.out.println("\n--- MESSAGE REPORT ---");
+        for (Message msg : sentMessages) {
+            System.out.println("Message Hash: " + msg.getMessageHash());
+            System.out.println("Recipient: " + msg.getRecipient());
+            System.out.println("Message: " + msg.getMessage());
+            System.out.println("-------------------------");
+        }
     }
 }
