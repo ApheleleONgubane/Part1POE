@@ -9,6 +9,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -28,6 +30,8 @@ public class Message {
         this.message = message;
         this.numMessagesSent = numMessagesSent;
         this.messageID = generateMessageID(); // Auto-generate the 10-digit ID
+    // Generate the message hash when the object is created
+    this.messageHash = createMessageHash();
     }
    
     // METHOD 1: Generate random 10-digit Message ID
@@ -224,87 +228,120 @@ public class Message {
 
         ArrayList<Message> messages = new ArrayList<>();
 
-        File file = new File("messages.json");
+    File file = new File("messages.json");
 
-        if (!file.exists() || file.length() == 0) {
+    if (!file.exists() || file.length() == 0) {
+        return messages;
+    }
+
+    try {
+
+        Scanner reader = new Scanner(file);
+        String json = "";
+
+        while (reader.hasNextLine()) {
+            json += reader.nextLine();
+        }
+
+        reader.close();
+
+        json = json.trim();
+
+        if (json.isEmpty() || json.equals("[]")) {
             return messages;
         }
 
-        try {
+        // Remove the outer JSON array brackets
+        json = json.substring(1, json.length() - 1);
 
-            Scanner reader = new Scanner(file);
+        // Separate individual message objects
+        String[] objects = json.split("\\},\\s*\\{");
 
-            String json = "";
+        for (String object : objects) {
 
-            while (reader.hasNextLine()) {
-json += reader.nextLine();
-            }
+            String id = getJsonValue(object, "messageID");
+            String recipient = getJsonValue(object, "recipient");
+            String messageText = getJsonValue(object, "message");
+            String hash = getJsonValue(object, "messageHash");
 
-            reader.close();
-
-            json = json.trim();
-
-            if (json.isEmpty() || json.equals("[]")) {
-                return messages;
-            }
-
-            // Remove opening and closing brackets
-            json = json.substring(1, json.length() - 1);
-
-            // Split individual message objects
-            String[] objects = json.split("\\},\\s*\\{");
-            for (String object : objects) {
-
-                object = object.replace("{", "");
-                object = object.replace("}", "");
-
-                String id = "";
-                String recipient = "";
-                String messageText = "";
-                String hash = "";
-
-                String[] fields = object.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
-
-                for (String field : fields) {
-
-                    String[] parts = field.split(":", 2);
-
-            if (parts.length == 2) {
-             String key = parts[0].replace("\"", "").trim();
-
-          String value = parts[1].replace("\"", "").trim();
-
-            if (key.equals("messageID")) {
-           id = value;
-
-           } else if (key.equals("recipient")) {
-            recipient = value;
-
-         } else if (key.equals("message")) {
-            messageText = value;
-
-       } else if (key.equals("messageHash")) {   
-                            
-       hash = value;
-                        }
-                    }
-                }
+            if (id != null && recipient != null
+                    && messageText != null && hash != null) {
 
                 Message msg = new Message(recipient, messageText, 0);
 
+                // Restore original stored values
                 msg.messageID = id;
                 msg.messageHash = hash;
 
                 messages.add(msg);
             }
-
-        } catch (IOException e) {
-
-            System.out.println("Error reading JSON file: " + e.getMessage());
         }
 
-        return messages;
-    }                  
+    } catch (IOException e) {
+
+        System.out.println("Error reading JSON file: " + e.getMessage());
+    }
+
+    return messages;
+}
+
+// Extract a JSON string value
+private static String getJsonValue(String object, String key) {
+
+    String regex = "\"" + Pattern.quote(key)
+            + "\"\\s*:\\s*\"((?:\\\\.|[^\"\\\\])*)\"";
+
+    Pattern pattern = Pattern.compile(regex);
+    Matcher matcher = pattern.matcher(object);
+
+    if (matcher.find()) {
+        return unescapeJson(matcher.group(1));
+    }
+
+    return null;
+}
+
+// Convert escaped JSON characters back to normal characters
+private static String unescapeJson(String value) {
+
+    StringBuilder result = new StringBuilder();
+
+    for (int i = 0; i < value.length(); i++) {
+
+        char current = value.charAt(i);
+
+        if (current == '\\' && i + 1 < value.length()) {
+
+            char next = value.charAt(++i);
+
+            switch (next) {
+                case 'n':
+                    result.append('\n');
+                    break;
+                case 'r':
+                    result.append('\r');
+                    break;
+                case 't':
+                    result.append('\t');
+                    break;
+                case '"':
+                    result.append('"');
+                    break;
+                case '\\':
+                    result.append('\\');
+                    break;
+                default:
+                    result.append(next);
+                    break;
+            }
+
+        } else {
+            result.append(current);
+        }
+    }
+
+    return result.toString();
+}
                     
     // METHOD 9: Getters
 
