@@ -135,7 +135,7 @@ public class Login {
             this.FirstName = firstName;
             this.LastName = lastName;
             
-            finalMessage ="Registration successful";
+           
         }
 
         return finalMessage;
