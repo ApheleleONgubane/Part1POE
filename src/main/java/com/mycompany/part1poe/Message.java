@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
-
+import java.util.ArrayList;
 
 /**
  *
@@ -107,8 +107,14 @@ public class Message {
 
         return hash;
     }
+// METHOD 5: Check message length
+    public boolean checkMessageLength() {
 
-    // METHOD 5: Send, Disregard or Store Message
+        return this.message != null
+                && this.message.length() <= 250;
+    }
+
+    // METHOD 6: Send, Disregard or Store Message
     public String SentMessage(int choice) {
 
         if (choice == 1) {
@@ -129,7 +135,7 @@ public class Message {
         }
     }
 
-    // METHOD 6: Store Message as JSON without external libraries
+    // METHOD 7: Store Message as JSON without external libraries
     public String storeMessage() {
 
         File file = new File("messages.json");
@@ -212,8 +218,95 @@ public class Message {
             return "Error storing message: " + e.getMessage();
         }
     }
+    
+    // METHOD 8: Read messages from JSON file
+    public static ArrayList<Message> readMessagesFromFile() {
 
-    // METHOD 7: Getters
+        ArrayList<Message> messages = new ArrayList<>();
+
+        File file = new File("messages.json");
+
+        if (!file.exists() || file.length() == 0) {
+            return messages;
+        }
+
+        try {
+
+            Scanner reader = new Scanner(file);
+
+            String json = "";
+
+            while (reader.hasNextLine()) {
+json += reader.nextLine();
+            }
+
+            reader.close();
+
+            json = json.trim();
+
+            if (json.isEmpty() || json.equals("[]")) {
+                return messages;
+            }
+
+            // Remove opening and closing brackets
+            json = json.substring(1, json.length() - 1);
+
+            // Split individual message objects
+            String[] objects = json.split("\\},\\s*\\{");
+            for (String object : objects) {
+
+                object = object.replace("{", "");
+                object = object.replace("}", "");
+
+                String id = "";
+                String recipient = "";
+                String messageText = "";
+                String hash = "";
+
+                String[] fields = object.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+
+                for (String field : fields) {
+
+                    String[] parts = field.split(":", 2);
+
+            if (parts.length == 2) {
+             String key = parts[0].replace("\"", "").trim();
+
+          String value = parts[1].replace("\"", "").trim();
+
+            if (key.equals("messageID")) {
+           id = value;
+
+           } else if (key.equals("recipient")) {
+            recipient = value;
+
+         } else if (key.equals("message")) {
+            messageText = value;
+
+       } else if (key.equals("messageHash")) {   
+                            
+       hash = value;
+                        }
+                    }
+                }
+
+                Message msg = new Message(recipient, messageText, 0);
+
+                msg.messageID = id;
+                msg.messageHash = hash;
+
+                messages.add(msg);
+            }
+
+        } catch (IOException e) {
+
+            System.out.println("Error reading JSON file: " + e.getMessage());
+        }
+
+        return messages;
+    }                  
+                    
+    // METHOD 9: Getters
 
     public String getMessageID() {
 
