@@ -45,7 +45,9 @@ public class Part1POE {
         System.out.println("\n--- Registration Result ---");
         System.out.println(registrationMessage);
      
-       if(registrationMessage=="Registration successful"){
+       if (registrationMessage.contains("Username successfully captured.")
+        && registrationMessage.contains("Password successfully captured.")
+        && registrationMessage.contains("Cell phone number successfully added.")) {
         
         // ---- Now try to log in ----
         System.out.println("\n--- Login ---");
@@ -161,6 +163,7 @@ public class Part1POE {
 
   // Increase total sent
     totalSent++;
+    sentMessages.add(newMsg);
 
    // Display message details after choosing Send
    System.out.println("\n--- Message Details ---");
@@ -182,6 +185,7 @@ public class Part1POE {
  System.out.println("Message deleted.");
  } else {
     System.out.println("Message disregarded.");
+     disregardedMessages.add(newMsg);
      }
 
       }
@@ -190,6 +194,7 @@ public class Part1POE {
        else if (action == 3) {
 
         System.out.println(newMsg.storeMessage());
+        storedMessages.add(newMsg);
 
   // Display stored message details
   System.out.println("\n--- Message Details ---");
